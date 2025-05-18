@@ -8,8 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var networkStore: NetworkStore
     var body: some View {
-        CountdownScreenView()
+        if networkStore.isConnected {
+            CountdownScreenView()
+        } else {
+            Text("Network is unavailable")
+        }
     }
 }
 

@@ -49,7 +49,7 @@ struct CountdownScreenView: View {
         }.onChange(of: isTimeUp) {
             if isTimeUp {
                 playBellSound()
-                NotificationManager.showNotification(title: "DRINK TIME!!", body: "Drink some water 💧")
+                NotificationManager.showNotification(title: "Time to hydrate! 💦", body: "Grab a sip of water and give your body some love 💧")
             } else {
                 DispatchQueue.global(qos: .userInitiated).async {
                     self.player?.stop()

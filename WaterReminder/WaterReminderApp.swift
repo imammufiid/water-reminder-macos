@@ -11,6 +11,7 @@ import SwiftUI
 struct mac_winter_reminderApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject var store = TimesUpStore()
+    @StateObject var networkStore = NetworkStore()
     
     var body: some Scene {
         WindowGroup {
@@ -21,7 +22,9 @@ struct mac_winter_reminderApp: App {
                         window.center()
                         window.title = "Water Reminder"
                     }
-                ).environmentObject(store)
+                )
+                .environmentObject(store)
+                .environmentObject(networkStore)
                 .onReceive(NotificationCenter.default.publisher(for: .notificationTapped)) { _ in
                     print("SwiftUI view detected notification tap")
                 }

@@ -11,11 +11,12 @@ import AVFoundation
 struct TimesUpView: View {
     @Binding var isActive: Bool
     @EnvironmentObject var store: TimesUpStore
+    @StateObject private var firebaseStore = FirebaseStore()
     
     var body: some View {
         VStack(spacing: 40) {
-            Text("DRINK TIME!!!")
-                .font(.system(size: 48, weight: .bold))
+            Text("Time to hydrate! 💦")
+                .font(.system(size: 30, weight: .bold))
                 .foregroundStyle(.red)
                 .scaleEffect(isActive ? 1.05 : 1.0)
                 .animation(.easeInOut(duration: 0.2).repeatForever(autoreverses: true), value: isActive)
@@ -28,9 +29,10 @@ struct TimesUpView: View {
                 .animation(.easeInOut(duration: 0.1).repeatForever(autoreverses: true), value: isActive)
             
             HStack {
-                Button("Naah, wait") {
+                Button("Remind me later") {
                     isActive = false
                     store.markTimesUpDone()
+                    firebaseStore.addReminder(isDrink: false)
                 }
                 .buttonStyle(.plain)
                 .padding()
@@ -39,13 +41,16 @@ struct TimesUpView: View {
                 .clipShape(Capsule())
                 .keyboardShortcut(.escape)
                 
-                Button("OK, I'm Drinking") {
+                Button("Just drank!") {
                     isActive = false
                     store.markTimesUpDone()
+                    firebaseStore.addReminder(isDrink: true)
                 }
                 .buttonStyle(GrowingButton())
                 .keyboardShortcut(.return)
             }
+        }.onAppear {
+            firebaseStore.fetchReminders()
         }
     }
 }
