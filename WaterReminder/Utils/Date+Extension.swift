@@ -11,7 +11,7 @@ extension Date {
     func toReadable() -> String {
         
         let formatter = DateFormatter()
-        formatter.dateFormat = "dd-MMM-yyyy HH:mm"
+        formatter.dateFormat = "dd-MMM-yyyy HH:mm:ss"
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.timeZone = TimeZone.current  // or set specific TimeZone
         

@@ -11,6 +11,7 @@ import FirebaseFirestore
 
 class FirebaseStore: ObservableObject {
     private var db = Firestore.firestore()
+    @Published var reminders: [ReminderEntity] = []
     
     func fetchReminders() {
         db.collection("reminders").addSnapshotListener { snapshot, error in
@@ -18,10 +19,10 @@ class FirebaseStore: ObservableObject {
                 print("No documents")
                 return
             }
-            let reminders = documents.compactMap { doc in
+            self.reminders = documents.compactMap { doc in
                 try? doc.data(as: ReminderEntity.self)
             }
-            reminders.forEach { item in
+            self.reminders.forEach { item in
                 print("\(item.id ?? "-"). \(item.isDrink) - \(item.createdAt.toReadable())")
             }
         }
