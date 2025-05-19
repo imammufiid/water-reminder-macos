@@ -7,12 +7,17 @@
 
 import SwiftUI
 import AVFoundation
+import Combine
 
 struct TimesUpView: View {
+    @State private var timeRemaining = 10
+    @State private var isRunning = false
+    @State private var timer: Timer.TimerPublisher = Timer.publish(every: 1, on: .main, in: .common)
+    @State private var timerCancellable: Cancellable?
     @Binding var isActive: Bool
     @EnvironmentObject var store: TimesUpStore
     @StateObject private var firebaseStore = FirebaseStore()
-    
+        
     var body: some View {
         VStack(spacing: 40) {
             Text("Time to hydrate! 💦")
@@ -33,6 +38,7 @@ struct TimesUpView: View {
                     isActive = false
                     store.markTimesUpDone()
                     firebaseStore.addReminder(isDrink: false)
+                    stopTimer()
                 }
                 .buttonStyle(.plain)
                 .padding()
@@ -45,13 +51,36 @@ struct TimesUpView: View {
                     isActive = false
                     store.markTimesUpDone()
                     firebaseStore.addReminder(isDrink: true)
+                    stopTimer()
                 }
                 .buttonStyle(GrowingButton())
                 .keyboardShortcut(.return)
             }
+        }.onReceive(timer) { _ in
+            if isRunning && timeRemaining > 0 {
+                timeRemaining -= 1
+            } else {
+                isActive = false
+                stopTimer()
+                store.markTimesUpDone()
+                firebaseStore.addReminder(isDrink: false)
+            }
         }.onAppear {
             firebaseStore.fetchReminders()
+            startTimer()
         }
+    }
+    
+    func startTimer() {
+        isRunning = true
+        timer = Timer.publish(every: 1, on: .main, in: .common)
+        timerCancellable = timer.connect()
+    }
+    
+    func stopTimer() {
+        isRunning = false
+        timerCancellable?.cancel()
+        timerCancellable = nil
     }
 }
 

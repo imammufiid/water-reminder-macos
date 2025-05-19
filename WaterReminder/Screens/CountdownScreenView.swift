@@ -22,6 +22,7 @@ struct CountdownScreenView: View {
         VStack {
             if isTimeUp {
                 TimesUpView(isActive: $isTimeUp)
+                    .id(UUID())
             } else {
                 Picker("Interval Time", selection: $selectedTimeIndex) {
                     ForEach(0..<timeOptions.count, id: \.self) { index in

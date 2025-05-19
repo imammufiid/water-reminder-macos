@@ -18,4 +18,8 @@ extension Date {
         let formattedString = formatter.string(from: self)
         return formattedString
     }
+    
+    var isToday: Bool {
+        Calendar.current.isDateInToday(self)
+    }
 }

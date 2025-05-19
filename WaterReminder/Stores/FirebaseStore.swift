@@ -7,25 +7,23 @@
 
 import Foundation
 import FirebaseFirestore
-//import FirebaseFirestoreSwift
 
 class FirebaseStore: ObservableObject {
     private var db = Firestore.firestore()
     @Published var reminders: [ReminderEntity] = []
     
     func fetchReminders() {
-        db.collection("reminders").addSnapshotListener { snapshot, error in
-            guard let documents = snapshot?.documents else {
-                print("No documents")
-                return
+        db.collection("reminders")
+            .order(by: "createdAt", descending: true)
+            .addSnapshotListener { snapshot, error in
+                guard let documents = snapshot?.documents else {
+                    print("No documents")
+                    return
+                }
+                self.reminders = documents.compactMap { doc in
+                    try? doc.data(as: ReminderEntity.self)
+                }
             }
-            self.reminders = documents.compactMap { doc in
-                try? doc.data(as: ReminderEntity.self)
-            }
-            self.reminders.forEach { item in
-                print("\(item.id ?? "-"). \(item.isDrink) - \(item.createdAt.toReadable())")
-            }
-        }
     }
     
     func addReminder(isDrink: Bool) {

@@ -21,19 +21,6 @@ struct HistoryScreenView: View {
                 .font(.subheadline)
                 .foregroundStyle(.gray)
             
-            Button(action: {
-                sortAscending.toggle()
-            }) {
-                HStack {
-                    Image(systemName: "arrow.up.arrow.down")
-                    Text("Sort by Title")
-                    Spacer()
-                    Text(sortAscending ? "A → Z" : "Z → A")
-                        .foregroundColor(.gray)
-                }
-            }
-            .padding(.vertical, 6)
-            
             List(firebaseStore.reminders) { reminder in
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Drink? \(reminder.isDrink)")
