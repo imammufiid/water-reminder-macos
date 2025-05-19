@@ -19,7 +19,7 @@ struct ContentView: View {
                 if showHistory {
                     GeometryReader { geometry in
                         HStack {
-                            CountdownScreenView()
+                            CountdownScreenView(showHistory: $showHistory)
                                 .frame(width: geometry.size.width * 0.4)
                             HistoryScreenView()
                                 .frame(width: geometry.size.width * 0.6,
@@ -28,18 +28,16 @@ struct ContentView: View {
                         
                     }
                 } else {
-                    CountdownScreenView()
-                }
-                Button("History") {
-                    showHistory = !showHistory
-                    resizeWindow()
+                    CountdownScreenView(showHistory: $showHistory)
                 }
             }
             .background(
                 WindowAccessor { win in
                     self.window = win
                 }
-            )
+            ).onChange(of: showHistory) {
+                resizeWindow()
+            }
         } else {
             Text("Network is unavailable")
         }
@@ -54,10 +52,6 @@ struct ContentView: View {
         frame.size.width = newWidth
         
         window.setFrame(frame, display: true, animate: true)
-        
-        
-//        let newSize = NSSize(width: showHistory ? 800 : 400, height: 500)
-//        window.setContentSize(newSize)
         
     }
 }

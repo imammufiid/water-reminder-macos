@@ -13,6 +13,7 @@ struct CountdownScreenView: View {
     @State private var selectedTimeIndex = 0
     @State private var selectedRepeatOptionIndex = 0
     @State private var player: AVAudioPlayer?
+    @Binding var showHistory: Bool
     
     let timeOptions = [10, 60, 120, 600]
     let repeatOptions = ["Yes", "No"]
@@ -44,6 +45,22 @@ struct CountdownScreenView: View {
                     totalTime: timeOptions[selectedTimeIndex],
                     isTimeUp: $isTimeUp,
                     repeatReminderSelected: $selectedRepeatOptionIndex)
+                
+                Spacer()
+                Button(action: {
+                    showHistory = !showHistory
+                }) {
+                    HStack {
+                        Image(systemName: showHistory ? "chevron.left.circle" : "chevron.right.circle")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 18, height: 18)
+                            .padding(4)
+                        Text(showHistory ? "Kembali" : "Riwayat")
+                    }
+                }
+                .buttonStyle(PlainButtonStyle())
+                .padding(.bottom, 10)
             }
         }.onAppear {
             NotificationManager.requestNotificationPermission()
@@ -78,5 +95,5 @@ struct CountdownScreenView: View {
 }
 
 #Preview {
-    CountdownScreenView()
+    CountdownScreenView(showHistory: .constant(false))
 }

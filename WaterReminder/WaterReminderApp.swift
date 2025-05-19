@@ -18,7 +18,7 @@ struct mac_winter_reminderApp: App {
             ContentView()
                 .background(
                     WindowAccessor { window in
-                        window.setContentSize(NSSize(width: 400, height: 500))
+                        window.setContentSize(NSSize(width: 400, height: 550))
                         window.center()
                         window.title = "Water Reminder"
                     }
